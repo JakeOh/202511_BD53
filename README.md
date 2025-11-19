@@ -6,7 +6,7 @@
 ---
 
 * 강의 동영상
-  * [Youtube Playlist](https://www.youtube.com/watch?v=a_5Q_gf1Yqg&list=PLIYf0rAjO5mY-xE36xaBCJdZzLFH6QjKI)
+  * [Youtube Playlist](https://www.youtube.com/playlist?list=PLIYf0rAjO5mY-xE36xaBCJdZzLFH6QjKI)
 
 * lab_sql
   * [Oracle Database 21c Express Edition 다운로드](https://www.oracle.com/kr/database/technologies/xe-downloads.html)
