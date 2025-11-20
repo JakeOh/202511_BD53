@@ -123,3 +123,29 @@ select empno, ename, job, sal
 from emp
 where job not in ('CLERK', 'ANALYST', 'MANAGER')
 order by empno;
+
+
+-- like 검색: 특정 문자열이 포함된 값들을 찾는 검색 방법
+-- like 검색에서 사용되는 wildcard:
+-- (1) %: 글자수 상관없이 어떤 문자열이어도 상관 없음.
+-- (2) _: 밑줄(underscore)이 있는 자리에 한 글자가 어떤 문자이더라도 상관 없음.
+
+select * from emp where job like 'C%';
+--> 업무가 'C'로 시작하는 모든 단어인 경우.
+
+select * from emp where job like '%R';
+--> 업무가 'R'로 끝나는 모든 단어인 경우.
+
+select * from emp where job like '%A%';
+--> 업무에 'A'가 포함된 경우.
+
+select * from emp where job like 'C_';
+select * from emp where job like '_LERK';
+select * from emp where job like '__ERK';
+
+-- 이름에 'A'가 포함된 직원들의 정보.
+select * from emp where ename like '%A%';
+
+-- 업무에 'MAN'이 포함된 직원들의 정보.
+select * from emp where job like '%MAN%';
+
