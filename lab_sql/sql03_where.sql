@@ -149,3 +149,31 @@ select * from emp where ename like '%A%';
 -- 업무에 'MAN'이 포함된 직원들의 정보.
 select * from emp where job like '%MAN%';
 
+
+select * from emp where empno = 7369;
+--> 사번(empno)가 숫자 7369와 같은 레코드.
+
+-- 암묵적 타입 변환
+select * from emp where empno = '7369';
+--> 사번(empno)가 문자열 '7369'과 같은 레코드.
+--> 오라클은 문자열 값을 숫자로 변환한 후에 empno 컬럼의 값들과 비교.
+
+-- 명시적 타입 변환: 함수를 사용함.
+select * from emp where empno = to_number('7369');
+
+-- 날짜 타입의 크기 비교: 과거(2024년) < 현재(2025년) < 미래(2026년)
+-- 1982/01/01 이후에 입사한 직원들
+select * from emp where hiredate > '1982/01/01';
+--> 오라클은 문자열 '1982/01/01'을 날짜 타입(DATE)으로 암묵적으로 변환한 후 
+-- hiredate 컬럼의 값들과 크기를 비교해서 조건에 맞는 레코드들을 검색.
+
+select * from emp where hiredate > '82/01/01';
+--> 위 SQL 문장의 실행 결과는 
+-- 도구 -> 환경설정 -> 데이터베이스 -> NLS -> 날짜/시간 형식 설정에 따라서 다른 결과를 줌.
+-- 날짜 형식의 문자열을 DATE 타입으로 암묵적 변환이 일어날 경우에는 환경 설정에 따라서 다른 결과.
+-- 날짜 형식의 문자열은 명시적인 타입 변환을 하는 것을 권장.
+-- to_date('날짜 형식으로 작성된 문자열', '날짜 포맷') 함수 사용방법
+select to_date('2025-11-20', 'YYYY-MM-DD') from dual;
+select to_date('11/20/2025', 'MM/DD/YYYY') from dual;
+select to_date('01/05/2025', 'MM/DD/YYYY') from dual;
+select to_date('01/05/2025', 'DD/MM/YYYY') from dual;
