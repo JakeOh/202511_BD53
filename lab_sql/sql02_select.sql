@@ -75,3 +75,20 @@ select ename from emp order by ename;
 select deptno, ename, hiredate
 from emp
 order by deptno, hiredate;
+
+-- 사번, 이름, 업무, 급여를 검색.
+-- 정렬 순서: (1) 업무 오름차순, (2) 급여 오름차순
+select empno, ename, job, sal
+from emp
+order by job, sal;
+
+-- 중복되는 데이터는 제거하고 출력.
+-- (문법) select distinct 컬럼, ... from 테이블;
+select distinct deptno from emp;
+
+-- select 문장과 select distinct 문장 비교
+select deptno, job from emp order by deptno, job;
+select distinct deptno, job from emp order by deptno, job;
+
+-- (주의) distinct 키워드는 한번만 사용!
+-- select distinct deptno, distinct job from emp;
