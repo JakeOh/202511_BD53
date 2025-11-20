@@ -177,3 +177,14 @@ select to_date('2025-11-20', 'YYYY-MM-DD') from dual;
 select to_date('11/20/2025', 'MM/DD/YYYY') from dual;
 select to_date('01/05/2025', 'MM/DD/YYYY') from dual;
 select to_date('01/05/2025', 'DD/MM/YYYY') from dual;
+
+-- 2자리 연도 표기: 
+-- (1) YY(현재 세기): 현재 세기의 끝 두 자리.
+-- (2) RR(반올림 세기): 반올림해서 현재 세기가 될 수 있는 연도들.
+--     2000 - 50 = 1950 ~ 2000 + 49 = 2049
+select to_date('99/11/20', 'YY/MM/DD') from dual;  --> 2099년
+select to_date('99/11/20', 'RR/MM/DD') from dual;  --> 1999년
+
+
+-- 조건절에서의 날짜 크기 비교
+select * from emp where hiredate > to_date('82/01/01', 'RR/MM/DD');
