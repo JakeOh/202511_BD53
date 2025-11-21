@@ -27,6 +27,10 @@ select
     ename, lower(ename), upper(ename), initcap(ename)
 from emp;
 
+-- 이름 중에 대/소문자 구분없이 'a'가 포함된 직원들의 레코드.
+select * from emp
+where lower(ename) like '%a%';
+
 -- replace(문자열 [컬럼], 변환전 문자, 변환할 문자)
 select replace('smith', 'i', '*') from dual;
 select replace('allen', 'l', '*') from dual;
@@ -54,3 +58,39 @@ select * from emp where length(ename) >= 6;
 -- 직원 이름의 첫글자와 마지막 글자만 표기하고 중간은 '*'로만 출력.
 select substr(ename, 1, 1) || '*' || substr(ename, length(ename), 1)
 from emp;
+
+-- nvl(var, value): var가 null이면 value를 반환하고, null이 아니면 var를 그대로 반환.
+select comm, nvl(comm, -1)
+from emp;
+
+-- nvl2(var, value1, value2): var가 null이 아니면 value1을, null이면 value2를 반환.
+select comm, nvl2(comm, '수당받음', '수당없음')
+from emp;
+
+select comm, nvl2(comm, comm, -1)
+from emp;
+
+-- 직원이름, 급여, 수당, 연봉(= 급여 * 12 + 수당)을 출력
+select
+    ename, sal, comm, 
+    sal * 12 + nvl(comm, 0) as "ANUAL_SAL"
+from emp;
+
+-- 연봉이 30,000 이상인 직원들의 이름, 급여, 수당, 연봉을 출력.
+-- 연봉 내림차순 정렬해서 출력.
+select
+    ename, sal, comm, 
+    sal * 12 + nvl(comm, 0) as "ANUAL_SAL"
+from emp
+where sal * 12 + nvl(comm, 0) >= 30000
+order by ANUAL_SAL desc;
+--> select 절에서 설정한 별명(alias)는 from, where 등의 절에서는 사용할 수 없음.
+-- order by 절에서만 사용할 수 있음.
+
+-- 연봉이 10,000 이상 30,000 이하인 직원들의 이름, 급여, 수당, 연봉을 연봉 내림차순으로 출력.
+select
+    ename, sal, comm, 
+    sal * 12 + nvl(comm, 0) as "ANUAL_SAL"
+from emp
+where sal * 12 + nvl(comm, 0) between 10000 and 30000
+order by ANUAL_SAL desc;
