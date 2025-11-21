@@ -94,3 +94,64 @@ select
 from emp
 where sal * 12 + nvl(comm, 0) between 10000 and 30000
 order by ANUAL_SAL desc;
+
+-- round() 함수: 반올림
+select 
+    10 / 3,
+    round(10 / 3),     --> 소수점 첫째 자리에서 반올림해서 정수로 표현
+    round(10 / 3, 1),  --> 소수점 둘째 자리에서 반올림해서 소수점 한자리까지 표현
+    round(10 / 3, 2)   --> 소주점 둘째짜리까지만 표현.
+from dual;
+
+-- round(값, 음의정수): 정수 자릿수에서 반올림.
+select round(153, -1), round(153, -2) from dual;
+
+-- trunc() 함수: 버림. 잘라냄.
+select trunc(3.141592, 2), trunc(3.141592, 3) from dual;
+select round(3.141592, 2), round(3.141592, 3) from dual;
+
+-- decode(var, value, return1, return2)
+-- var의 값이 value와 같으면 return1 반환, 그렇지 않으면 return2를 반환.
+-- 부서번호가 10번인 직원은 보너스가 100, 그렇지 않으면 보너스 200.
+select
+    ename, deptno,
+    decode(deptno, 10, 100, 200) as BONUS
+from emp;
+
+-- decode(var, value1, return1, value2, return2, return3)
+-- var의 값이 value1이면 return1을, var의 값이 value2이면 return2를, 그렇지 않으면 return3을 반환
+-- 부서번호가 10이면 보너스는 50, 부서번호가 20이면 보너스 100, 그렇지 않으면 보너스 0
+select
+    ename, deptno,
+    decode(deptno, 10, 50, 20, 100, 0) as BONUS
+from emp;
+
+-- case-when 구문: decode() 함수를 대신할 수 있는 구문
+select
+    ename, deptno,
+    case 
+        when deptno = 10 then 50
+        when deptno = 20 then 100
+        else 0
+    end as BONUS
+from emp;
+
+-- 급여가 3000 이상이면 보너스 100, 2000 이상이면 150, 1000 이상이면 170, 그렇지 않으면 200
+select
+    ename, sal,
+    case
+        when sal >= 3000 then 100
+        when sal >= 2000 then 150
+        when sal >= 1000 then 170
+        else 200
+    end as BONUS
+from emp;
+
+-- case-when 구문에서 when 조건절의 순서는 중요할 수 있음.
+select ename, sal,
+    case
+        when sal >= 1000 then 100
+        when sal >= 2000 then 200
+        else 0
+    end as BONUS
+from emp;
