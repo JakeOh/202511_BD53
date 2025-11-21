@@ -70,3 +70,66 @@ select deptno, round(avg(sal), 2) as AVG_SAL
 from emp
 group by deptno
 order by deptno;
+
+-- 소수가 나오는 경우는 반올림해서 소숫점 둘째 자리까지만 표현.
+-- PRESIDENT를 제외하고 업무별 직원수, 급여 평균, 최댓값, 최솟값을 출력.
+select 
+    job, 
+    count(*) as COUNT_EMP, 
+    round(avg(sal), 2) as AVG_SAL,
+    max(sal) as MAX_SAL,
+    min(sal) as MIN_SAL
+from emp
+where job != 'PRESIDENT'
+group by job
+order by job;
+
+select 
+    job, 
+    count(*) as COUNT_EMP, 
+    round(avg(sal), 2) as AVG_SAL,
+    max(sal) as MAX_SAL,
+    min(sal) as MIN_SAL
+from emp
+group by job
+having job != 'PRESIDENT'
+order by job;
+
+-- 매니저 있는(null이 아닌) 직원들 중에서 업무별 직원수, 급여 평균 출력
+select 
+    job,
+    count(*) as CNT,
+    round(avg(sal), 2) as AVG_SAL
+from emp
+where mgr is not null
+group by job
+order by job;
+
+/*
+select 
+    job,
+    count(*) as CNT,
+    round(avg(sal), 2) as AVG_SAL
+from emp
+group by job
+having mgr is not null
+order by job;
+*/
+
+-- 업무별 급여 평균이 2000 이상인 그룹들을 출력.
+select
+    job,
+    round(avg(sal), 2) as AVG_SAL
+from emp
+group by job
+having avg(sal) >= 2000
+order by job;
+
+-- 매니저 있는 직원들 중에서 업무별 급여 평균이 2000인 업무들을 출력.
+select
+    job, round(avg(sal), 2) as AVG_SAL
+from emp
+where mgr is not null
+group by job
+having avg(sal) >= 2000
+order by job;
