@@ -41,3 +41,32 @@ from emp;
 -- 다중행 함수는 단일행 함수와 함께 사용될 수 없음!
 -- select count(comm), nvl(comm, 0) from emp;
 -- select comm, count(comm) from emp;
+
+/*
+ * 그룹별 쿼리
+ * (예) 부서별 직원수, 부서별 급여 평균, ...
+ * (문법)
+ * select 컬럼, 그룹함수, ...
+ * from 테이블, ...
+ * where 조건식(1)
+ * group by 컬럼(그룹을 묶기 위한 필드), ...
+ * having 조건식(2)
+ * order by 컬럼(정렬 기준이 되는 필드), ...;
+ * 
+ * where 조건식(1): 그룹을 묶기 전에 조건을 만족하는 행들만 선택하기 위한 조건식.
+ * having 조건식(2): 그룹을 묶은 다음에 조건에 맞는 그룹들만 선택하기 위한 조건식.
+ */
+ 
+-- group by에서 사용한 그룹을 묶기 위한 컬럼 이름은 select에서 사용할 수 있음.
+-- groub by에서 설정되지 않은 컬럼은 select할 수 없음.
+-- 부서별 인원수
+select deptno, count(*)
+from emp
+group by deptno
+order by deptno;
+
+-- 부서별 급여 평균(소숫점 2자리까지)
+select deptno, round(avg(sal), 2) as AVG_SAL
+from emp
+group by deptno
+order by deptno;
