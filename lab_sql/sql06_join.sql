@@ -53,3 +53,58 @@ select
     e.ename, e.deptno, d.deptno, d.dname
 from emp e, dept d
 where e.deptno = d.deptno(+);
+
+
+-- right outer join: 직원이름, 부서번호, 부서이름
+-- (1) ANSI 문법
+select
+    e.ename, e.deptno, d.deptno, d.dname
+from emp e
+    right join dept d on e.deptno = d.deptno;
+--> right outer join에서 outer는 생략 가능.
+
+-- (2) Oracle 문법
+select
+    e.ename, e.deptno, d.deptno, d.dname
+from emp e, dept d
+where e.deptno(+) = d.deptno;
+
+
+-- full outer join: 직원이름, 부서번호, 부서이름.
+-- (1) ANSI 문법
+select
+    e.ename, e.deptno, d.deptno, d.dname
+from emp e
+    full join dept d on e.deptno = d.deptno;
+--> full outer join에서 outer는 생략 가능.
+
+-- (2) Oracle 문법
+-- 오라클에서는 full outer join 문법을 제공하지 않음!
+-- 오라클에서는 left outer join의 결과와 right outer join의 결과를 "합집합(union)"
+select
+    e.ename, e.deptno, d.deptno, d.dname
+from emp e, dept d
+where e.deptno = d.deptno(+)
+union
+select
+    e.ename, e.deptno, d.deptno, d.dname
+from emp e, dept d
+where e.deptno(+) = d.deptno;
+
+
+-- equi-join: 조인 조건식이 등호(=)로 작성된 경우.
+-- non-equi join: 조인 조건식이 부등호(>, >=, <, <=, ...)로 작성된 경우.
+-- emp과 salgrade 테이블에서 사번, 이름, 급여, 급여등급을 검색(inner join)
+-- (1) ANSI 문법
+select
+    e.empno, e.ename, e.sal, s.grade
+from emp e
+    join salgrade s 
+    on e.sal between s.losal and s.hisal;
+    -- on e.sal >= s.losal and e.sal <= s.hisal;
+
+-- (2) Oracle 문법
+select
+    e.empno, e.ename, e.sal, s.grade
+from emp e, salgrade s
+where e.sal between s.losal and s.hisal;
