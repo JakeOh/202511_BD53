@@ -133,3 +133,45 @@ where mgr is not null
 group by job
 having avg(sal) >= 2000
 order by job;
+
+-- 부서별 업무별 직원수, 급여 평균/최솟값/최댓값을 출력.
+select 
+    deptno, job, 
+    count(*) as CNT,
+    avg(sal) as AVG_SAL,
+    min(sal) as MIN_SAL,
+    max(sal) as MAX_SAL
+from emp
+group by deptno, job
+order by deptno, job;
+
+-- 매니저가 있는 직원들 중에서 
+-- 부서별 업무별 급여 평균이 1000 이상인 그룹들만
+-- 부서별 업무별 직원수, 급여 평균/최솟값/최댓값을 출력.
+select
+    deptno, job, 
+    avg(sal),
+    min(sal),
+    max(sal)
+from emp
+where mgr is not null
+group by deptno, job
+having avg(sal) >= 1000
+order by deptno, job;
+
+-- 입사연도별 직원수를 입사연도 오름차순으로 출력
+select 
+    to_char(hiredate, 'YYYY') as HIRE_YEAR,
+    count(*) as CNT
+from emp
+group by to_char(hiredate, 'YYYY')
+order by HIRE_YEAR;
+
+-- 입사연도별 부서별 직원수 출력
+select
+    to_char(hiredate, 'YYYY') as HIRE_YEAR,
+    deptno,
+    count(*) as CNT
+from emp
+group by to_char(hiredate, 'YYYY'), deptno
+order by HIRE_YEAR, deptno;
