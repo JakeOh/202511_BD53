@@ -104,8 +104,9 @@ select
 from emp e1, emp e2, salgrade s
 where e1.mgr = e2.empno(+) 
     and 
-    e1.sal between s.losal(+) and s.hisal(+)
+    e1.sal between s.losal and s.hisal
 order by "매니저이름", "급여등급";
+
 
 -- Ex3. 직원 이름, 부서 이름, 급여, 급여 등급 검색
 -- 정렬 순서: (1) 부서 이름, (2) 급여 등급
@@ -141,18 +142,18 @@ order by d.deptno;
 -- Ex5. 부서 번호, 부서 이름, 부서 직원수, 부서의 급여 최솟값/최댓값 검색.
 -- 부서 번호 오름차순.
 select
-    e.deptno, d.dname, count(e.empno), min(e.sal), max(e.sal)
+    d.deptno, d.dname, count(e.empno), min(e.sal), max(e.sal)
 from emp e
     join dept d on e.deptno = d.deptno
-group by e.deptno, d.dname
-order by e.deptno;
+group by d.deptno, d.dname
+order by d.deptno;
 
 select
-    e.deptno, d.dname, count(e.empno), min(e.sal), max(e.sal)
+    d.deptno, d.dname, count(e.empno), min(e.sal), max(e.sal)
 from emp e, dept d 
 where e.deptno = d.deptno
-group by e.deptno, d.dname
-order by e.deptno;
+group by d.deptno, d.dname
+order by d.deptno;
 
 -- Ex6. 부서 번호, 부서 이름, 사번, 직원이름, 매니저 사번, 매니저 이름, 
 -- 직원 급여, 직원 급여 등급 검색.
