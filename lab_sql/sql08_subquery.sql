@@ -150,3 +150,57 @@ where empno not in (
     select distinct mgr from emp
     where mgr is not null
 );
+
+
+-- 다중 행 서브쿼리와 exists, not exists
+-- 매니저인 직원들?
+select * from emp e1
+where exists (
+    select * from emp e2 where e2.mgr = e1.empno
+);
+
+-- 매지저가 아닌 직원들?
+select * from emp e1
+where not exists (
+    select * from emp e2 where e2.mgr = e1.empno
+);
+
+
+-- 부서 테이블의 부서 정보(번호, 이름, 위치)를 출력. 단, 직원 테이블에 존재하는 부서들만.
+select * from dept d
+where exists (
+    select * from emp e where e.deptno = d.deptno
+)
+order by deptno;
+
+-- 부서 테이블의 부서 정보(번호, 이름, 위치)를 출력. 단, 직원 테이블에 존재하지 않는 부서들만.
+select * from dept d
+where not exists (
+    select * from emp e where e.deptno = d.deptno
+);
+
+
+-- 다중 행 서브쿼리에서 any vs all
+select * from emp
+where sal > any (
+    select sal from emp where job = 'SALESMAN'
+);
+--> 영업사원 급여 최솟값(1250)보다 급여를 더 많이 받는 직원들
+
+select * from emp
+where sal > all (
+    select sal from emp where job = 'SALESMAN'
+);
+--> 영업사원 급여 최댓값(1600)보다 급여를 더 많이 받는 직원들
+
+
+-- having 절에서 사용되는 서브쿼리
+-- 업무별 급여의 합계 출력. 단, 영업사원들의 급여 합계보다 큰 경우만 출력.
+select job, sum(sal) as "TOTAL_SALARY"
+from emp
+group by job
+having sum(sal) > (
+    select sum(sal) from emp where job = 'SALESMAN'
+)
+order by TOTAL_SALARY;
+
