@@ -105,3 +105,48 @@ from emp
 where deptno = (
     select deptno from dept where loc = 'CHICAGO'
 );
+
+
+-- 단일 행 서브쿼리: 서브쿼리의 결과 행의 개수가 1개인 경우.
+-- 단일 행 서브쿼리는 동등비교(=)를 할 수 있음.
+
+-- 다중 행 서브쿼리: 서브쿼리의 결과 행의 개수가 2개 이상인 경우.
+-- 다중 행 서브쿼리는 동등비교(=)를 할 수 없음! in 연산자는 사용할 수 있음.
+-- SALESMAN들의 급여와 같은 급여를 받는 직원들?
+-- (step 1) SALESMAN의 급여
+select sal from emp where job = 'SALESMAN';
+-- (step 2) 급여는 1600 또는 1250 또는 1500인 직원
+select * from emp 
+where sal = 1600 or sal = 1250 or sal = 1500;
+-- or 조건절은 in 연산자로 대체할 수 있음.
+select * from emp where sal in (1600, 1250, 1500);
+-- 서브쿼리
+select * from emp
+where sal in (
+    select sal from emp where job = 'SALESMAN'
+);
+
+-- 매니저인 직원들?
+select * from emp
+where empno in (
+    select distinct mgr from emp
+);
+
+-- 매니저가 아닌 직원들?
+select * from emp
+where empno not in (
+    select distinct mgr from emp
+);
+--> 결과 행이 1개도 없음!
+-- 조건식 empno in (a, b, c)는 empno = a or empno = b or empno = c와 같은 의미.
+-- 조건식 empno not in (a, b, c)은 empno != a and empno != b and empno != c와 같은 의미.
+-- in 연산자는 값을 비교할 때 동등비교 연산자(=, !=)를 사용. null과 비교할 때도 동등비교 연산자를 사용.
+-- empno = null의 결과도, empno != null 결과도 항상 false.
+select * from emp where mgr != null;
+select * from emp where mgr is not null;
+
+select * from emp
+where empno not in (
+    select distinct mgr from emp
+    where mgr is not null
+);
