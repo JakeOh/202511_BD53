@@ -104,8 +104,15 @@ select
 from emp e1, emp e2, salgrade s
 where e1.mgr = e2.empno(+) 
     and 
-    e1.sal between s.losal and s.hisal
+    e1.sal between s.losal(+) and s.hisal(+)
 order by "매니저이름", "급여등급";
+
+-- right join -> 누군간의 매니저가 아닌 직원들도 검색됨.
+select
+    e1.*, e2.*
+from emp e1
+    right join emp e2 on e1.mgr = e2.empno
+;
 
 
 -- Ex3. 직원 이름, 부서 이름, 급여, 급여 등급 검색
