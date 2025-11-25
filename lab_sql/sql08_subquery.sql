@@ -1,0 +1,68 @@
+/*
+ * sub query(서브 쿼리): SQL 문장의 일부로 다른 SQL 문장이 포함되는 것.
+ * (1) select 절의 서브 쿼리
+ * (2) from 절의 서브 쿼리
+ * (3) where 절의 서브 쿼리
+ * (4) having 절의 서브 쿼리
+ * (주의) 서브 쿼리는 () 안에 작성. 서브 쿼리에서는 세미콜론(;)을 사용하지 않음.
+ */
+
+-- ALLEN의 급여보다 더 많은 급여를 받는 직원?
+-- (step 1) ALLEN의 급여
+select sal from emp where ename = 'ALLEN';
+
+-- (step 2) 급여가 1600보다 많은 직원들
+select * from emp where sal > 1600;
+
+-- 서브 쿼리
+select * from emp
+where sal > (
+    select sal from emp where ename = 'ALLEN'
+);
+
+
+-- 전체 사원의 급여 평균보다 더 많은 급여를 받는 직원들?
+-- (step 1) 급여 평균
+select avg(sal) from emp;
+-- (step 2) 급여가 평균 초과하는 직원
+select * from emp where sal > 2235;
+-- 서브 쿼리
+select * from emp
+where sal > (
+    select avg(sal) from emp
+);
+
+
+-- 1. ALLEN보다 적은 급여를 받는 직원들의 사번, 이름, 급여를 출력.
+select empno, ename, sal
+from emp
+where sal < (
+    select sal from emp where ename = 'ALLEN'
+);
+
+-- 2. ALLEN과 같은 업무를 담당하는 직원들의 사번, 이름, 부서번호, 업무, 급여를 출력.
+select empno, ename, deptno, job, sal
+from emp
+where job = (
+    select job from emp where ename = 'ALLEN'
+);
+
+-- 3. SALESMAN의 급여 최댓값보다 더 많은 급여를 받는 직원들의 사번, 이름, 급여, 업무를 출력.
+select empno, ename, sal, job
+from emp
+where sal > (
+    select max(sal) from emp where job = 'SALESMAN'
+);
+
+-- 4. WARD의 연봉보다 더 많은 연봉을 받는 직원들의 이름, 급여, 수당, 연봉을 출력.
+--    연봉 = sal * 12 + comm. comm(수당)이 null인 경우에는 0으로 계산.
+--    연봉 내림차순 정렬.
+select 
+    ename, sal, comm,
+    sal * 12 + nvl(comm, 0) as "연봉"
+from emp
+where sal * 12 + nvl(comm, 0) > (
+    select sal * 12 + nvl(comm, 0) from emp
+    where ename = 'WARD'
+)
+order by 연봉 desc;
