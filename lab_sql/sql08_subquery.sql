@@ -204,3 +204,53 @@ having sum(sal) > (
 )
 order by TOTAL_SALARY;
 
+
+-- select 절에서 사용되는 서브쿼리
+-- CLERK들의 사번, 이름, 급여, clerk 급여의 최솟값, 최댓값 출력.
+select
+    empno, ename, sal,
+    (select min(sal) from emp where job = 'CLERK') as "MIN_SALARY",
+    (select max(sal) from emp where job = 'CLERK') as "MAX_SALARY"
+from emp
+where job = 'CLERK';
+
+
+-- from 절에서 사용되는 서브쿼리
+
+-- 이름, 급여, 급여 순위(급여 내림차순) 출력
+select
+    ename, sal,
+    rank() over (order by sal desc) as "RANKING"
+from emp;
+
+-- 이름, 입사일, 입사일 순서(입사일 오름차순) 출력
+select
+    ename, hiredate,
+    rank() over (order by hiredate) as "RANK_YEAR"
+from emp;
+
+-- 오름차순(asc) 정렬에서는 null이 가장 마지막.
+-- 내림차순(desc) 정렬에서는 null이 가장 먼저.
+-- 내림차순 정렬에서 null 값들을 마지막에 출력하려면 order by 컬럼 desc nulls last 형식으로 작성.
+
+
+-- 이름, 급여, 급여 순위를 출력. 1 ~ 5위까지만 출력.
+select t.*
+from (
+        select 
+            ename, sal, 
+            rank() over (order by sal desc) as "RANKING"
+        from emp
+    ) t
+where t.RANKING <= 5;
+
+
+-- with 식별자 as (서브쿼리) 구문: 주된 SQL 문장을 간단히 작성하기 위해서.
+with t as (
+    select ename, sal,
+        rank() over (order by sal desc) as "RANKING"
+    from emp
+)
+select t.*
+from t
+where t.RANKING <= 5;
