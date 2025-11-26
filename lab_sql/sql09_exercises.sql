@@ -62,6 +62,7 @@ fetch next 5 rows only;
 --> offset x rows: 첫 x개의 행을 건너뛰고
 --> fetch next y rows only: 그다음 y개의 행들만 출력.
 
+
 /*
  * 연습문제 - hr 계정을 사용
  * - hr.sql 스크립트를 실행
@@ -71,6 +72,13 @@ fetch next 5 rows only;
  */
 
 -- 1. 직원의 이름과 부서 이름을 출력. (inner join)
+select 
+    e.first_name || ' ' || e.last_name as "직원이름",
+    d.department_name
+from employees e
+    join departments d on e.department_id = d.department_id
+;
+
 -- 2. 직원의 이름과 부서 이름을 출력. 부서 번호가 없는 직원도 출력.
 -- 3. 직원의 이름과 직무 이름(job title)을 출력.
 -- 4. 직원의 이름과 직원이 근무하는 도시 이름(city)를 출력.
