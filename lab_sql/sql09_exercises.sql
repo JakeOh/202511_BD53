@@ -7,6 +7,60 @@
 -- 2. 직원 테이블을 사번 오름차순으로 정렬했을 때 6 ~ 10번 행까지 출력
 -- 3. 직원 테이블을 사번 오름차순으로 정렬했을 때 11 ~ 15번 행까지 출력
 
+-- rownum: Oracle에서 제공되는 가상(pseudo) 컬럼.
+select rownum, e.* from emp e;
+select rownum, e.* from emp e order by empno;
+
+select
+    rownum, t.*
+from (
+    select * from emp order by empno
+) t;
+
+select
+    t2.*
+from (
+    select rownum as "RN", t1.* 
+    from (
+        select * from emp order by empno
+    ) t1
+) t2
+where t2.RN between 11 and 15;
+
+with t2 as (
+    select rownum as "RN", t1.*
+    from (
+        select * from emp order by empno
+    ) t1
+)
+select t2.*
+from t2
+where t2.RN between 11 and 15;
+
+-- row_number() 윈도우 함수 사용:
+select 
+    emp.*,
+    row_number() over (order by empno) as "RN"
+from emp;
+
+with t as (
+    select 
+        emp.*,
+        row_number() over (order by empno) as "RN"
+    from emp
+)
+select t.*
+from t
+where t.RN between 11 and 15;
+
+-- Top-N 쿼리(query)
+select *
+from emp
+order by empno
+offset 10 rows
+fetch next 5 rows only;
+--> offset x rows: 첫 x개의 행을 건너뛰고
+--> fetch next y rows only: 그다음 y개의 행들만 출력.
 
 /*
  * 연습문제 - hr 계정을 사용
