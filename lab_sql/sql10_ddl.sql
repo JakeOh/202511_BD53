@@ -68,3 +68,46 @@ commit;
 --> stu_no에 저장할 수 있는 자릿수(4자리)보다 큰 값을 삽입하려고 해서.
 
 
+-- varchar2 타입의 단위: byte(기본값) vs char
+-- varchar2(10)는 varchar2(10 byte)와 같다.
+-- 오라클에서 문자를 저장할 때 UTF-8 인코딩 타입을 사용하는 경우,
+-- 영문자, 숫자, 특수기호 -> 1글자를 저장할 때 1바이트를 사용.
+-- 한글 -> 1글자를 저장할 때 3바이트를 사용.
+-- 테이블 컬럼의 데이터 타입이 varchar2(n char)인 경우, 한글/영문 상관없이 n개까지 문자를 저장할 수 있음.
+-- 컬럼 데이터 타입이 varchar2(n byte)인 경우, 저장할 수 있는 한글/영문 문자 개수가 다름!
+
+insert into ex_students (stu_name) values ('1234567890');
+-- insert into ex_students (stu_name) values ('01234567890');
+--> 글자가 너무 큼(글자수가 10개를 넘음) 오류
+
+insert into ex_students (stu_name) values ('가나다라마바사아자차');
+-- insert into ex_students (stu_name) values ('가나다라마바사아자차a');
+
+select * from ex_students;
+commit;
+
+
+create table ex_byte (
+    col_str varchar2(5)  /* varchar2(5 byte)와 같음. */
+);
+
+insert into ex_byte values ('abc12');
+-- 문자열 'abc12'의 길이는 5바이트이기 때문에 insert 성공.
+
+-- insert into ex_byte values ('홍길동');
+--> 문자열 '홍길동'은 한글로만 이루어져 있기 때문에 3x3=9 바이트.
+
+commit;
+
+
+-- create table 연습: emp 테이블과 같은 이름, 같은 타입의 컬럼들을 갖는 테이블(ex_emp)
+create table ex_emp (
+    empno       number(4),
+    ename       varchar2(10 byte),
+    job         varchar2(9 byte),
+    mgr         number(4),
+    hiredate    date,
+    sal         number(7, 2),
+    comm        number(7, 2),
+    deptno      number(4)
+);
