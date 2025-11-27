@@ -111,3 +111,35 @@ create table ex_emp (
     comm        number(7, 2),
     deptno      number(4)
 );
+
+
+-- create table-as select 구문: 테이블을 생성하면서 기존 테이블의 내용을 복사.
+-- dept 테이블을 전체 복사
+create table dept_copy
+as select * from dept;
+
+-- dept 테이블 구조(컬럼 & 데이터 타입)는 복사, 데이터는 복사하지 않기.
+create table dept_copy2
+as select * from dept where deptno = -1;
+
+-- emp 테이블에서 10번 부서 직원들의 사번, 이름, 부서번호, 급여를 복사한 테이블 emp_copy1
+create table emp_copy1
+as select empno, ename, deptno, sal from emp 
+    where deptno = 10;
+
+-- emp_copy2: emp 테이블과 dept 테이블을 inner join해서 emp 테이블의 모든 컬럼과 부서이름, 위치 컬럼을 갖는 테이블
+create table emp_copy2 as
+    select e.*, d.dname, d.loc
+    from emp e join dept d on e.deptno = d.deptno
+    order by e.empno;
+    
+select * from emp_copy2;
+
+-- create table-as select는 물리적인 테이블을 생성.
+-- view: 가상 테이블.
+create view vw_emp_dept as
+    select e.*, d.dname, d.loc
+    from emp e join dept d on e.deptno = d.deptno
+    order by e.empno;
+
+select * from vw_emp_dept;
