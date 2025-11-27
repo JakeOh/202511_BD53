@@ -85,3 +85,57 @@ create table ex_tbl3 (
     constraint tbl3_ck_salary check (salary >= 0)
 );
 
+
+-- Foreign Key: (다른/같은) 테이블의 PK를 참조(reference)하는 제약조건.
+-- 데이터를 삽입할 때 PK에 없는 값은 삽입되지 않도록 하기 위해서.
+-- (1) PK를 갖는 테이블을 먼저 생성, 그 PK를 참조하는 FK를 갖는 테이블을 나중에 생성.
+--     예: dept 테이블을 먼저 생성, emp 테이블 나중에 생성.
+-- (2) PK/FK 제약조건 설정 없이 테이블(들)을 생성하고, 그 후에 제약조건을 추가(alter table).
+
+-- PK를 갖는 테이블. 다른 테이블에서 참조하게될 테이블.
+create table ex_dept (
+    /* 컬럼 선언 */
+    id      number(2),
+    name    varchar2(10),
+    
+    /* 제약 조건 */
+    constraint ex_dept_pk_id primary key (id)
+);
+
+insert into ex_dept values (10, 'HR');
+insert into ex_dept values (20, 'IT');
+commit;
+
+-- FK를 갖는 테이블. ex_dept 테이블의 id 컬럼을 참조하는 테이블.
+-- (1) 제약조건 이름 없이 컬럼 선언과 함께 FK 제약조건을 설정.
+create table ex_emp2 (
+    id      number(4) primary key,
+    name    varchar2(10),
+    dept_id number(2) references ex_dept (id)
+);
+
+insert into ex_emp2 values (1004, '오쌤', 20);
+commit;
+
+-- insert into ex_emp2 values (2000, '홍길동', 50);
+--> ex_dept 테이블의 id 컬럼에 값 50이 없기 때문에.
+
+-- (2) 컬럼 선언과 함께 제약조건 이름과 내용을 설정.
+create table ex_emp3 (
+    id      number(4) 
+            constraint ex_emp3_pk_id primary key,
+    name    varchar2(10),
+    dept_id number(2)
+            constraint ex_emp3_fk_dept_id references ex_dept (id)
+);
+
+
+-- (3) 컬럼 선언 따로, FK 제약조건 따로 설정.
+create table ex_emp4 (
+    id      number(4),
+    name    varchar2(10),
+    dept_id number(2),
+    
+    constraint ex_emp4_pk_id primary key (id),
+    constraint ex_emp4_fk_dept_id foreign key (dept_id) references ex_dept (id)
+);
