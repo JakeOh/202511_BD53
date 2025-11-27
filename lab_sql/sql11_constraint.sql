@@ -54,5 +54,34 @@ select * from ex_tbl1;
 -- 데이터 무결성: 테이블에 데이터를 삽입(insert)할 때 결점이 없는 데이터들만 입력될 수 있도록 유지 하는 것.
 
 
+-- 테이블 생성 시 제약조건 만들기 2: 제약조건의 이름 설정.
+-- (1) 컬럼을 선언하는 줄에서 제약조건 이름을 설정.
+create table ex_tbl2 (
+    /* 컬럼 선언과 함께 제약조건 이름/내용을 설정 */
+    id      number(4) 
+            constraint tbl2_pk_id primary key,
+    name    varchar2(10) 
+            constraint tbl2_nn_name not null,
+    email   varchar2(20) 
+            constraint tbl2_uq_email unique,
+    salary  number(9) 
+            constraint tbl2_ck_salary check (salary >= 0),
+    memo    varchar2(100)
+);
 
+-- (2) 컬럼 선언 따로, 제약조건 선언 따로.
+create table ex_tbl3 (
+    /* 컬럼 선언부 */
+    id      number(4),
+    name    varchar2(10),
+    email   varchar2(20),
+    salary  number(9),
+    memo    varchar2(100),
+    
+    /* 제약조건 선언부 */
+    constraint tbl3_pk_id primary key (id),
+    constraint tbl3_nn_name check (name is not null),
+    constraint tbl3_uq_email unique (email),
+    constraint tbl3_ck_salary check (salary >= 0)
+);
 
