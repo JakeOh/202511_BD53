@@ -85,3 +85,32 @@ where table_name = 'EX_TBL1';
 -- 'SYS_'로 시작하는 제약조건 이름들을 찾으세요.
 select constraint_name from user_constraints
 where constraint_name like 'SYS_%';
+
+
+-- 4. 수정: 컬럼 정의(데이터 타입, 기본값, null 여부, ...) 수정.
+-- ALTER TABLE 테이블_이름 MODIFY 컬럼_이름 데이터_타입 [기본값 제약조건 ...];
+-- MODIFY는 제약조건 내용을 변경할 수는 없음!
+-- 제약조건 변경은 (1) 기존 제약조건 삭제, (2) 새로운 제약조건 추가.
+
+-- students 테이블에서 grade 컬럼의 데이터 타입을 number(1)로 변경.
+alter table students modify grade number(1);
+
+-- students 테이블에서 name 컬럼을 20글자까지 저장하도록, null이 되지 않도록 수정.
+alter table students modify name varchar2(20 char) not null;
+
+
+-- DDL(Data Definition Language): create, alter, truncate, drop
+-- truncate table 테이블_이름;  --> 테이블의 모든 행들을 삭제. rollback이 되지 않음.
+select * from students;
+truncate table students;
+
+-- drop table 테이블_이름 [cascade constraints] [purge];
+drop table students;
+--> 테이블 객체를 휴지통(recycler)에 버림.
+
+purge table students;
+--> 휴지통의 테이블 객체를 완전 삭제.
+
+drop table ex_test purge;
+--> 테이블을 휴지통으로 버리지 않고 바로 완전 삭제.
+
