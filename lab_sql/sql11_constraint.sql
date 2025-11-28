@@ -139,3 +139,36 @@ create table ex_emp4 (
     constraint ex_emp4_pk_id primary key (id),
     constraint ex_emp4_fk_dept_id foreign key (dept_id) references ex_dept (id)
 );
+
+
+-- 기본값을 갖는 컬럼 선언
+create table ex_test (
+    id              number(6)
+                    constraint text_pk_id primary key,
+    content         varchar2(1000) not null,
+    view_cnt        number(6) 
+                    default 0  /* 기본값 설정 */
+                    constraint text_ck_view_cnt check (view_cnt >= 0),
+    created_time    date default sysdate /* 현재 시간을 기본값으로 설정 */
+);
+
+insert into ex_test (id, content) values (1, '안녕하세요.');
+--> insert할 때 view_cnt와 created_time을 삽입하지 않으면 기본값이 자동으로 삽입됨.
+
+insert into ex_test values (2, '오늘은 금요일입니다.', 100, '2025/12/01');
+--> insert할 때 view_cnt와 created_time 값을 주면 기본값은 무시됨.
+
+commit;
+
+select * from ex_test;
+
+
+
+
+
+
+
+
+
+
+
