@@ -114,3 +114,32 @@ purge table students;
 drop table ex_test purge;
 --> 테이블을 휴지통으로 버리지 않고 바로 완전 삭제.
 
+
+-- PK와 FK 관계로 연결된 2개의 테이블이 있을 때, 삭제 순서가 중요.
+-- (1) FK가 설정된 테이블을 먼저 삭제, PK를 가지고 있는 테이블을 나중에 삭제.
+-- (2) FK 제약조건을 삭제, 테이블들을 삭제.
+-- (3) drop table에서 연관된 FK 제약조건(들)을 함께 삭제 - cascade constraints
+
+-- ex_dept 테이블에서 id 컬럼이 PK
+-- ex_emp2 테이블에서 dept_id 컬럼에는 ex_dept.id(PK)를 참조하는 FK 제약조건이 설정.
+drop table ex_dept;
+--> 에러 발생
+
+drop table ex_dept cascade constraints;
+--> (1) ex_emp2 테이블의 FK 제약조건 삭제, (2) ex_dept 테이블을 삭제.
+
+select constraint_name, table_name
+from user_constraints
+where table_name = 'EX_EMP2';
+
+
+-- (참고) HR 계정: employees <---> departments
+select constraint_name, table_name, r_constraint_name
+from user_constraints
+where table_name in ('EMPLOYEES', 'DEPARTMENTS')
+order by table_name;
+
+-- drop table employees;
+-- drop table departments;
+
+drop table employees cascade constraints;
