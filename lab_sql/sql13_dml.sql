@@ -58,3 +58,61 @@ where empno = 7369;
 update emp
 set sal = sal * 1.1
 where job = 'CLERK';
+
+-- ACCOUNTING 부서에서 일하는 직원들의 급여를 10% 인상.
+update emp
+set sal = sal * 1.1
+where deptno = (
+    select deptno from dept where dname = 'ACCOUNTING'
+);
+
+-- 급여 등급이 1인 직원들의 급여를 20% 인상.
+select * 
+from emp 
+    join salgrade on emp.sal between salgrade.losal and salgrade.hisal
+where salgrade.grade = 1;
+
+select * from emp
+where sal between (select losal from salgrade where grade = 1)
+        and
+        (select hisal from salgrade where grade = 1);
+
+update emp
+set sal = sal * 1.2
+where sal between (select losal from salgrade where grade = 1)
+        and
+        (select hisal from salgrade where grade = 1);
+
+rollback;
+
+select * from emp;
+
+update emp
+set sal = sal * 1.2
+where empno in (
+    select e.empno
+    from emp e
+        join salgrade s on e.sal between s.losal and s.hisal
+    where s.grade = 1
+);
+
+commit;
+
+-- emp 테이블에서 comm이 null인 직원들의 comm을 0으로 업데이트.
+select * from emp where comm is null;
+
+update emp
+set comm = 0
+where comm is null;
+
+-- emp 테이블에서 부서번호가 dept 테이블에 없는 직원의 부서번호를 null로 업데이트.
+select * from emp
+where deptno not in (select deptno from dept);
+
+update emp
+set deptno = null
+where deptno not in (select deptno from dept);
+
+commit;
+
+select * from emp;
