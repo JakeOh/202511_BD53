@@ -29,3 +29,38 @@ select * from work_times where country = '한국';
 
 select * from work_times where country like '%한국%';
 --> 결과 행이 1개.
+
+-- country 컬럼의 국가 이름들에서 공백들을 모두 제거하고 업데이트.
+select trim('    hello sql    ') from dual;
+--> trim(): 문자열의 시작과 끝에 있는 모든 공백들을 제거.
+
+select trim(country) from work_times;
+--> 엑셀에서 임포트한 공백들이 잘리지 않음.
+
+select substr(country, length('　　　') + 1) from work_times;
+
+update work_times
+set country = substr(country, length('　　　') + 1);
+
+rollback;
+
+select replace('   hello', ' ', '') from dual;
+
+select replace(country, '　', '') from work_times;
+
+-- 정규 표현식(regular expression) 문자열 대체
+select regexp_replace(country, '[[:space:]]', '') from work_times;
+
+update work_times
+set country = regexp_replace(country, '[[:space:]]', '');
+
+select * from work_times;
+
+commit;
+
+select * from work_times where country = '한국';
+
+
+-- 2018년에 한국의 평균 근로시간보다 근로시간이 더 많은 국가들.
+
+-- 2018년의 평균 근로시간 상위 5개 국가들.
