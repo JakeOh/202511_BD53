@@ -116,3 +116,55 @@ where deptno not in (select deptno from dept);
 commit;
 
 select * from emp;
+
+/* 
+ * = 연산자의 의미:
+ * (1) where 절에서의 = 연산자: 비교 연산자
+ *     (예) where 컬럼 = 값: 컬럼이 값과 같으면.
+ * (2) set 절에서의 = 연산자: 할당(대입) 연산자
+ *     (예) set 컬럼 = 값: 컬럼에 값을 저장(할당).
+ * (참고) is 연산자: null인 지를 비교할 때 사용하는 비교 연산자.
+ */
+
+
+-- delete 문장: 테이블에서 (조건을 만족하는) 행(들)을 삭제하는 DML.
+-- (비교) truncate, drop: DDL
+-- (문법) DELETE FROM 테이블이름 [WHERE 조건절];
+-- 조건절은 생략 가능. 조건절이 없으면 테이블의 모든 행들이 삭제됨.
+
+delete from emp;
+select * from emp;
+
+rollback;
+
+-- 사번이 1004인 직원 정보를 테이블에서 삭제.
+delete from emp where empno = 1004;
+
+-- 이름이 SMITH인 직원 정보를 삭제.
+delete from emp where ename = 'SMITH';
+
+-- 급여등급이 5인 직원 정보를 삭제.
+delete from emp
+where sal >= (select losal from salgrade where grade = 5) 
+    and 
+    sal <= (select hisal from salgrade where grade = 5);
+
+select * from emp;
+
+commit;
+
+-- 급여등급이 4인 직원(들)의 정보를 삭제
+select e.*, s.*
+from emp e
+    join salgrade s on e.sal between s.losal and s.hisal
+where s.grade = 4;
+
+delete from emp
+where empno in (
+    select e.empno
+    from emp e
+        join salgrade s on e.sal between s.losal and s.hisal
+    where s.grade = 4
+);
+
+commit;
