@@ -62,5 +62,123 @@ select * from work_times where country = '한국';
 
 
 -- 2018년에 한국의 평균 근로시간보다 근로시간이 더 많은 국가들.
+-- 2018년 한국 평균 근로시간
+select country, y2018 from work_times
+where country = '한국';
+
+select country, y2018 from work_times
+where y2018 > (
+    select y2018 from work_times where country = '한국'
+);
+
+select * from work_times
+where y2014 > (select y2018 from work_times where country = '한국')
+    or y2015 > (select y2018 from work_times where country = '한국')
+    or y2016 > (select y2018 from work_times where country = '한국')
+    or y2017 > (select y2018 from work_times where country = '한국')
+    or y2018 > (select y2018 from work_times where country = '한국')
+;
 
 -- 2018년의 평균 근로시간 상위 5개 국가들.
+-- (1) offset-fetch 구문
+select * from work_times
+order by y2018 desc
+offset 0 rows
+fetch next 5 rows only;
+
+-- (2) rank() 함수
+select 
+    w.*,
+    rank() over (order by y2018 desc) as "RANKING"
+from work_times w;
+
+with t as (
+    select 
+        w.*,
+        rank() over (order by y2018 desc) as "RANKING"
+    from work_times w
+)
+select * from t
+where t.RANKING <= 5;
+
+-- (3) row_number() 함수
+select
+    w.*,
+    row_number() over (order by y2018 desc) as "RN"
+from work_times w;
+
+with t as (
+    select
+        w.*,
+        row_number() over (order by y2018 desc) as "RN"
+    from work_times w
+)
+select * from t
+where t.RN <= 5;
+
+
+-- 각각의 연도에서 평균 근로시간이 가장 많은 나라?
+select max(y2018) from work_times;
+
+select * from work_times
+where y2018 = (select max(y2018) from work_times);
+
+select * from work_times
+where y2017 = (select max(y2017) from work_times);
+
+select * from work_times
+where y2016 = (select max(y2016) from work_times);
+
+select * from work_times
+where y2015 = (select max(y2015) from work_times);
+
+select * from work_times
+where y2014 = (select max(y2014) from work_times);
+
+-- unpivot(): 컬럼의 내용들을 행으로 바꿈. 가로 데이터 -> 세로 데이터.
+-- unpivot(컬럼으로 사용할 이름 for 변수 in (col1, col2, ...))
+select * from work_times
+unpivot(work_time for year in (y2014, y2015, y2016, y2017, y2018));
+
+create view vw_work_times_long
+as
+select * from work_times
+unpivot(work_time for year in (y2014, y2015, y2016, y2017, y2018));
+
+select * from vw_work_times_long;
+
+select * from vw_work_times_long 
+where country = '한국' and year = 'Y2018';
+
+-- 2018년 한국 평균 근로시간보다 더 많은 근로시간을 갖는 나라와 연도?
+select * from vw_work_times_long
+where work_time > (
+    select work_time from vw_work_times_long
+    where country = '한국' and year = 'Y2018'
+);
+
+-- 각각의 연도에서 평균 근로시간 최댓값.
+select year, max(work_time)
+from vw_work_times_long
+group by year;
+
+select *
+from vw_work_times_long
+where (year, work_time) in (
+    select year, max(work_time)
+    from vw_work_times_long
+    group by year
+);
+
+-- 각각의 연도에서 평균 근로시간 최솟값
+select year, min(work_time)
+from vw_work_times_long
+group by year;
+
+select *
+from vw_work_times_long
+where (year, work_time) in (
+    select year, min(work_time)
+    from vw_work_times_long
+    group by year
+);
