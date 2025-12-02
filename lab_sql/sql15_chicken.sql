@@ -13,3 +13,43 @@
  *    (6) 구별 성별 통화 건수의 평균
  *    (7) 요일별 구별 연령대별 통화 건수의 평균
  */
+
+-- CSV(Comma-Separated Values) 파일:
+-- 값들들 쉼표(,)로 구분해서 테이블 모양의 데이터를 텍스트로 작성한 파일.
+
+drop table call_chicken purge;
+
+create table call_chicken (
+    call_date   date,
+    call_day    char(5 char), /* char: 고정길이 문자열 */
+    gu          varchar2(5 char), /* varchar2: 가변길이 문자열 */
+    ages        varchar2(5 char),
+    gender      char(1 char),
+    calls       number(4)
+);
+
+
+select * from call_chicken;
+
+select count(*) from call_chicken;
+--> 행(row) 개수
+
+select distinct call_date from call_chicken order by call_date;
+
+select distinct call_day from call_chicken;
+
+select distinct gu from call_chicken order by gu;
+
+select distinct ages from call_chicken order by ages;
+
+select distinct gender from call_chicken;
+
+-- 1. 통화 건수의 최댓값, 최솟값
+select max(calls), min(calls) from call_chicken;
+
+
+-- 2. 통화 건수가 최댓값이거나 최솟값인 레코드(행) 출력
+select * from call_chicken
+where calls = (select max(calls) from call_chicken)
+    or
+    calls = (select min(calls) from call_chicken);
