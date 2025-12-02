@@ -104,3 +104,105 @@ where life_exp = (
     select max(life_exp) from gapminder
 );
 
+-- 인구 최댓값 레코드
+select * from gapminder
+where pop = (
+    select max(pop) from gapminder
+);
+
+-- 1인당 GDP 최댓값 레코드
+select * from gapminder
+where gdp_percap = (
+    select max(gdp_percap) from gapminder
+);
+
+-- 우리나라 통계 자료
+select distinct country from gapminder
+where lower(country) like '%kor%';
+
+select * from gapminder
+where country = 'Korea, Rep.';
+
+-- 연도별 1인당 GDP의 최댓값인 레코드
+select year, max(gdp_percap)
+from gapminder
+group by year
+order by year;
+
+select * from gapminder
+where (year, gdp_percap) in (
+    select year, max(gdp_percap) from gapminder
+    group by year
+)
+order by year;
+
+
+-- 대륙별 1인당 GDP 최댓값 레코드
+select continent, max(gdp_percap)
+from gapminder
+group by continent
+order by continent;
+
+select * from gapminder
+where (continent, gdp_percap) in (
+    select continent, max(gdp_percap) from gapminder
+    group by continent
+)
+order by continent;
+
+
+-- 연도별, 대륙별 인구수
+select year, continent, sum(pop) as "TOTAL_POP"
+from gapminder
+group by year, continent
+order by continent, year;
+--order by year, continent;
+
+select year, continent, sum(pop) as "TOTAL_POP"
+from gapminder
+group by year, continent
+order by TOTAL_POP desc
+offset 0 rows
+fetch next 1 rows only;
+
+with t as (
+    select year, continent, sum(pop) as "TOTAL_POP"
+    from gapminder
+    group by year, continent
+)
+select t.* from t
+where t.TOTAL_POP = (
+    select max(t.TOTAL_POP) from t
+);
+
+
+-- 연도별, 대륙별 기대 수명의 평균
+select year, continent, round(avg(life_exp), 2) AS "AVG_LIFE_EXP"
+from gapminder
+group by year, continent
+order by year, continent;
+
+select year, continent, round(avg(life_exp), 2) AS "AVG_LIFE_EXP"
+from gapminder
+group by year, continent
+order by AVG_LIFE_EXP desc;
+
+select 
+    year, continent, round(avg(life_exp), 2) as "AVG_LIFE_EXP"
+from gapminder
+group by year, continent
+order by AVG_LIFE_EXP desc
+offset 0 rows
+fetch next 1 rows only;
+
+with t as (
+    select 
+        year, continent, avg(life_exp) as "AVG_LIFE_EXP"
+    from gapminder
+    group by year, continent
+)
+select *
+from t
+where "AVG_LIFE_EXP" = (
+    select max("AVG_LIFE_EXP") from t
+);
