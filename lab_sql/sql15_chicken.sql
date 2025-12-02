@@ -53,3 +53,52 @@ select * from call_chicken
 where calls = (select max(calls) from call_chicken)
     or
     calls = (select min(calls) from call_chicken);
+
+-- 3. 요일별 통화 건수 평균
+select 
+    call_day,
+    round(avg(calls), 2) as "CALLS"
+from call_chicken
+group by call_day
+order by CALLS desc;
+
+-- 4. 연령대별 통화 건수 평균
+select 
+    ages,
+    round(avg(calls), 2) as "CALLS"
+from call_chicken
+group by ages
+order by CALLS desc;
+
+-- 5. 요일별, 연령대별 통화 건수 평균
+select
+    call_day, ages,
+    round(avg(calls), 2) as "CALLS"
+from call_chicken
+group by call_day, ages
+order by CALLS desc;
+
+select
+    call_day, ages,
+    round(avg(calls), 2) as "CALLS"
+from call_chicken
+group by call_day, ages
+order by CALLS desc
+offset 0 rows
+fetch next 10 rows only;
+
+-- 6. 구별, 성별 통화 건수 평균
+select
+    gu, gender,
+    round(avg(calls), 2) as "CALLS"
+from call_chicken
+group by gu, gender
+order by CALLS desc;
+
+-- 7. 요일별, 구별, 연령대별 통화 건수 평균
+select
+    call_day, gu, ages,
+    round(avg(calls), 2) as "CALLS"
+from call_chicken
+group by call_day, gu, ages
+order by CALLS desc;
