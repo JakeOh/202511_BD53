@@ -23,3 +23,84 @@
  * 14. 11번 문제의 결과에서 대륙이름이 컬럼이 되도록 출력하세요.
  * 15. 12번 문제의 결과에서 대륙이름이 컬럼이 되도록 출력하세요.
  */
+
+drop table gapminder;
+
+create table gapminder (
+    country     varchar2(100),
+    continent   varchar2(100),
+    year        number(4),
+    life_exp    number,
+    pop         number,
+    gdp_percap  number
+);
+
+-- 데이터 탐색
+-- 테이블 전체 행 개수
+select count(*) from gapminder;
+
+-- 각 컬럼에 null이 아닌 데이터들의 개수
+select
+    count(country), count(continent), count(year),
+    count(life_exp), count(pop), count(gdp_percap)
+from gapminder;
+--> 결과: null이 있는 컬럼은 없음.
+
+-- 연속형 변수 vs 범주(카테고리)형 변수
+-- 연속형 변수 -> 통계량(평균, 표준편차, 최댓값, 최솟값, 중위값, ...)
+-- 범주형 변수 -> 개수(빈도수)
+
+select * from gapminder
+order by country, year;
+
+-- 국가 이름 개수
+select distinct country from gapminder order by country;
+
+select count(distinct country) from gapminder;
+
+-- 연도 개수
+select distinct year from gapminder order by year;
+
+select count(distinct year) from gapminder;
+
+-- 대륙 개수
+select distinct continent from gapminder;
+
+
+-- 기대수명의 기술 통계량
+select
+    round(avg(life_exp), 2) as "평균",
+    round(variance(life_exp), 2) as "분산",
+    round(stddev(life_exp), 2) as "표준편차",
+    min(life_exp) as "최솟값",
+    max(life_exp) as "최댓값",
+    median(life_exp) as "중위값"
+from gapminder;
+
+-- 인구 기술 통계량
+select
+    round(avg(pop), 2) as "평균",
+    round(variance(pop), 2) as "분산",
+    round(stddev(pop), 2) as "표준편차",
+    min(pop) as "최솟값",
+    max(pop) as "최댓값",
+    median(pop) as "중위값"
+from gapminder;
+
+-- 1인당 GDP 기술 통계량
+select
+    round(avg(gdp_percap), 2) as "평균",
+    round(variance(gdp_percap), 2) as "분산",
+    round(stddev(gdp_percap), 2) as "표준편차",
+    min(gdp_percap) as "최솟값",
+    max(gdp_percap) as "최댓값",
+    median(gdp_percap) as "중위값"
+from gapminder;
+
+
+-- 기대수명 최댓값인 레코드(행, row)
+select * from gapminder
+where life_exp = (
+    select max(life_exp) from gapminder
+);
+
