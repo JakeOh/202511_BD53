@@ -155,8 +155,8 @@ order by continent;
 select year, continent, sum(pop) as "TOTAL_POP"
 from gapminder
 group by year, continent
-order by continent, year;
---order by year, continent;
+--order by continent, year;
+order by year, continent;
 
 select year, continent, sum(pop) as "TOTAL_POP"
 from gapminder
@@ -234,3 +234,65 @@ from t
 where AVG_GDP_PERCAP = (
     select max(AVG_GDP_PERCAP) from t
 );
+
+
+-- pivot() 함수를 사용한 연도별, 대륙별 인구수
+with t as (
+    select year, continent, pop from gapminder
+)
+select * from t
+pivot(sum(pop) for continent in ('Africa' as "AFRICA", 
+                                'Americas' as "AMERICAS", 
+                                'Asia' as "ASIA", 
+                                'Europe' as "EUROPE", 
+                                'Oceania' as "OCEANIA"))
+order by year;
+
+with t as (
+    select year, continent, pop from gapminder
+)
+select * from t
+pivot(
+    sum(pop) for year in (1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, 1997, 2002, 2007)
+)
+order by continent;
+
+
+-- pivot() 함수를 사용한 연도별 대륙별 기대수명 평균
+with t as (
+    select year, continent, life_exp from gapminder
+)
+select
+    year, 
+    round(AFRICA, 2) as AFRICA,
+    round(AMERICAS, 2) as AMERICAS,
+    round(ASIA, 2) as ASIA,
+    round(EUROPE, 2) as EUROPE,
+    round(OCEANIA, 2) as OCEANIA
+from t
+pivot(avg(life_exp) for continent in ('Africa' as "AFRICA", 
+                                'Americas' as "AMERICAS", 
+                                'Asia' as "ASIA", 
+                                'Europe' as "EUROPE", 
+                                'Oceania' as "OCEANIA"))
+order by year;
+
+
+-- pivot() 함수를 사용한 연도별 대륙별 1인당 GDP 평균
+with t as (
+    select year, continent, gdp_percap from gapminder
+)
+select
+    year, 
+    round(AF, 2) as AFRICA,
+    round(AM, 2) as AMERICAS,
+    round("AS", 2) as ASIA,
+    round(EU, 2) as EUROPE,
+    round(OC, 2) as OCEANIA
+from t
+pivot(avg(gdp_percap) for continent in ('Africa' as "AF", 
+                                    'Americas' as "AM", 
+                                    'Asia' as "AS", 
+                                    'Europe' as "EU", 
+                                    'Oceania' as "OC"))
+order by year;
