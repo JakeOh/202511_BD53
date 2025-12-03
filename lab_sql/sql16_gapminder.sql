@@ -136,6 +136,21 @@ where (year, gdp_percap) in (
 )
 order by year;
 
+-- rank() 함수를 이용한 그룹별 최댓값 찾기
+select
+    g.*,
+    rank() over (partition by year order by g.gdp_percap desc) as "RANKING"
+from gapminder g;
+
+with t as (
+    select 
+        g.*,
+        rank() over (partition by year order by g.gdp_percap desc) as "RANKING"
+    from gapminder g
+)
+select * from t
+where t.RANKING = 1;
+
 
 -- 대륙별 1인당 GDP 최댓값 레코드
 select continent, max(gdp_percap)
