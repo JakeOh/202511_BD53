@@ -14,6 +14,7 @@
 
 * lab_python
   * Python 프로그래밍 언어
+  * Python을 사용한 데이터 분석
 
 * [202511_BD53_PyCharmProj](https://github.com/JakeOh/202511_BD53_PyCharmProj)
   * PyCharm IDE 파이썬 프로젝트
