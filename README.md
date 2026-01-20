@@ -21,6 +21,7 @@
     *  seaborn
 
 * lab_ml
+  * Mahine Learning & Deep Learning
   * scikit-learn
 
 * [202511_BD53_PyCharmProj](https://github.com/JakeOh/202511_BD53_PyCharmProj)
