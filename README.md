@@ -23,8 +23,13 @@
 * lab_ml
   * Mahine Learning & Deep Learning
   * scikit-learn
+  * tensorflow
+  * keras
 
 * [202511_BD53_PyCharmProj](https://github.com/JakeOh/202511_BD53_PyCharmProj)
   * PyCharm IDE 파이썬 프로젝트
   * [Python 3.12 다운로드](https://www.python.org/downloads/release/python-31210/)
   * [PyCharm 다운로드](https://www.jetbrains.com/ko-kr/pycharm/download/)
+
+* [202511_BD53_LLM_Agent](https://github.com/JakeOh/202511_BD53_LLM_Agent)
+  * PyCharm IDE 파이썬 LLM Agent 프로젝트
