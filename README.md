@@ -26,6 +26,9 @@
   * tensorflow
   * keras
 
+* lab_tableau
+  * Tableau 데이터 시각화
+
 * [202511_BD53_PyCharmProj](https://github.com/JakeOh/202511_BD53_PyCharmProj)
   * PyCharm IDE 파이썬 프로젝트
   * [Python 3.12 다운로드](https://www.python.org/downloads/release/python-31210/)
